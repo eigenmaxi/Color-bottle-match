@@ -1,10 +1,7 @@
-/* main.js - Final Farcaster + Base Version
-   Preserves your original Bottle Match game flow
-   Adds full Farcaster Mini App SDK support
-   Keeps minting, upload, and UI logic untouched
+/* main.js - Enhanced Debugging Version
+   Restores your perfect game flow, updates minting for Base mainnet
+   Keeps detailed logging and error handling
 */
-
-import { sdk } from "https://esm.sh/@farcaster/miniapp-sdk";  // ✅ Load SDK directly for browser
 
 const ethersLib = window.ethers;
 if (!ethersLib) console.warn('ethers not found - blockchain features will not work.');
@@ -27,17 +24,6 @@ const CONTRACT_ADDRESS = "0xCd0F532029F42F21E18eA1164cF8848cF380B370"; // Base m
 const ABI = [
   "function mintScoreNFT(string memory imageUrl, uint256 score) public"
 ];
-
-// ------- FARCASTER MINI APP READY FIX -------
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    console.log("⏳ Initializing Farcaster Mini App...");
-    await sdk.actions.ready();  // ✅ Official Farcaster ready signal
-    console.log("✅ Farcaster Mini App Ready!");
-  } catch (err) {
-    console.error("⚠️ Farcaster SDK not ready:", err);
-  }
-});
 
 // ------- GAME LOGIC -------
 startButton.addEventListener('click', startGame);
@@ -188,25 +174,46 @@ async function showEndScreen() {
         return;
       }
 
+      console.log('Requesting wallet accounts...');
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      console.log('Connected accounts:', accounts);
+
+      console.log('Switching to Base Mainnet...');
       await switchToBaseMainnet();
+      console.log('Network switched successfully');
 
       const provider = new ethersLib.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethersLib.Contract(CONTRACT_ADDRESS, ABI, signer);
 
       const gasPrice = await provider.getGasPrice();
+      console.log('Current gas price:', ethersLib.utils.formatUnits(gasPrice, 'gwei'), 'gwei');
+
       const estimatedGas = await contract.estimateGas.mintScoreNFT(imageUrl, score);
+      console.log('Estimated gas:', estimatedGas.toString());
+
+      console.log('Minting NFT with image URL:', imageUrl, 'and score:', score);
       const tx = await contract.mintScoreNFT(imageUrl, score, {
         gasLimit: estimatedGas.mul(120).div(100),
         gasPrice,
       });
-      await tx.wait();
+      console.log('Transaction sent:', tx.hash);
+
+      const receipt = await tx.wait();
+      console.log('Transaction confirmed:', receipt.transactionHash);
 
       alert('✅ NFT minted successfully on Base Mainnet!');
     } catch (err) {
       console.error('Mint failed:', err);
-      alert(`❌ Mint failed: ${err.message}`);
+      if (err.code === 4001) {
+        alert('Transaction rejected by user.');
+      } else if (err.message.includes('out of gas') || err.message.includes('exceeds gas limit')) {
+        alert('❌ Transaction failed: insufficient gas.');
+      } else if (err.message.includes('network')) {
+        alert('❌ Network error. Please check your connection.');
+      } else {
+        alert(`❌ Mint failed: ${err.message}. See console for details.`);
+      }
     }
   };
 
@@ -259,3 +266,17 @@ async function switchToBaseMainnet() {
     }
   }
 }
+
+// ------- FARCASTER MINI APP READY FIX -------
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    if (window.frame && window.frame.actions && typeof window.frame.actions.ready === "function") {
+      await window.frame.actions.ready();
+      console.log("✅ Farcaster Mini App Ready!");
+    } else {
+      console.log("⚠️ Farcaster frame SDK not found.");
+    }
+  } catch (err) {
+    console.error("Farcaster ready() error:", err);
+  }
+});
