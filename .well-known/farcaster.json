@@ -1,11 +1,37 @@
 {
-  "name": "Bottle Match Game",
-  "description": "A fun color matching game where players match bottle colors and mint their score on Base.",
-  "icon": "https://color-bottle-match-nx4y.vercel.app/icon.png",
-  "url": "https://color-bottle-match-nx4y.vercel.app",
-  "redirect": "https://color-bottle-match-nx4y.vercel.app",
-  "developer": {
-    "name": "Your Name",
-    "url": "https://warpcast.com/yourhandle"
+  "frame": {
+    "name": "Colour Bottle Match",
+    "version": "1",
+    "iconUrl": "https://color-bottle-match-nx4y.vercel.app/icon.png",
+    "homeUrl": "https://color-bottle-match-nx4y.vercel.app",
+    "imageUrl": "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4291.jpg",
+    "buttonTitle": "Play Now",
+    "splashImageUrl": "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4289.jpg",
+    "splashBackgroundColor": "#2b2d42",
+    "webhookUrl": "https://color-bottle-match-nx4y.vercel.app/api/webhook",
+    "subtitle": "Match bottles by color and mint your score on Base",
+    "description": "Color Bottle Match is a fast-paced game where players match bottles by color before the timer runs out. Earn points, compete with friends, and mint your score as an NFT on Base.",
+    "primaryCategory": "games",
+    "screenshotUrls": [
+      "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4290.jpg"
+    ],
+    "heroImageUrl": "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4291.jpg",
+    "tags": [
+      "bottle",
+      "game",
+      "color",
+      "base",
+      "bottlematchgame"
+    ],
+    "tagline": "Tap fast. Match colors. Mint",
+    "ogTitle": "Play Color Bottle on Farcaster",
+    "ogDescription": "Can you match all the bottles before time runs out? Play now and mint your scorecard on Base!",
+    "ogImageUrl": "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4291.jpg",
+    "castShareUrl": "https://warpcast.com/~/compose?text=I+just+played+Color+Bottle+Match!+Match+colors,+mint+your+score+as+an+NFT,+and+challenge+your+friends+👉+https%3A%2F%2Fcolor-bottle-match-nx4y.vercel.app"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjI2NjIzMiwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDI4MDA3MTNlQjQ4MDcwODY2ZmRmOEQyNzE0MjhFMkJlZkY3QUIwMzcifQ",
+    "payload": "eyJkb21haW4iOiJjb2xvci1ib3R0bGUtbWF0Y2gtbng0eS52ZXJjZWwuYXBwIn0",
+    "signature": "kL5dnV3wIx+OcantKZ/+DgkX4864bK1ld8rLRnU/LbctK9MZUZ689+Lor1baRFdwUQZQcMwtCh4tzamtar7pxhw="
   }
 }
