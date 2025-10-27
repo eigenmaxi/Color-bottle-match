@@ -26,5 +26,10 @@
     "ogDescription": "Can you match all the bottles before time runs out? ",
     "ogImageUrl": "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4291.jpg",
     "castShareUrl": "https://color-bottle-match-nx4y.vercel.app"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjI2NjIzMiwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDI4MDA3MTNlQjQ4MDcwODY2ZmRmOEQyNzE0MjhFMkJlZkY3QUIwMzcifQ",
+    "payload": "eyJkb21haW4iOiJjb2xvci1ib3R0bGUtbWF0Y2gtbng0eS52ZXJjZWwuYXBwIn0",
+    "signature": "kL5dnV3wIx+OcantKZ/+DgkX4864bK1ld8rLRnU/LbctK9MZUZ689+Lor1baRFdwUQZQcMwtCh4tzamtar7pxhw="
   }
 }
