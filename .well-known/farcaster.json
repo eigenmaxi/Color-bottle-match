@@ -9,7 +9,7 @@
     "splashImageUrl": "https://color-bottle-match-nx4y.vercel.app/assets/IMG_4289.jpg",
     "splashBackgroundColor": "#2b2d42",
     "webhookUrl": "https://color-bottle-match-nx4y.vercel.app/api/webhook",
-    "subtitle": "Match bottles by color"
+    "subtitle": "Match bottles by color",
     "description": "Color Bottle Match is a fast-paced game where players match bottles by color before the timer runs out.",
     "primaryCategory": "games",
     "screenshotUrls": [
