@@ -1,16 +1,17 @@
 {
   "version": "1",
-  "name": "Color Bottle Match",
-  "subtitle": "Match colors and mint NFTs",
-  "description": "A fun bottle matching game where you can share scores on Farcaster and mint your scorecard as an NFT on Base.",
-  "screenshotUrls": [
-    "https://color-bottle-match-nx4y.vercel.app/screenshot1.png",
-    "https://color-bottle-match-nx4y.vercel.app/screenshot2.png"
-  ],
-  "iconUrl": "https://color-bottle-match-nx4y.vercel.app/icon.png",
-  "splashImageUrl": "https://color-bottle-match-nx4y.vercel.app/splash.png",
-  "splashBackgroundColor": "#7e57c2",
-  "homeUrl": "https://color-bottle-match-nx4y.vercel.app",
-  "primaryCategory": "games",
-  "tags": ["game", "nft", "matching", "farcaster"]
+  "name": "Bottle Match Game",
+  "description": "A fun color matching game that lets you mint your score as NFT on Base.",
+  "icon_url": "https://cdn-icons-png.flaticon.com/512/891/891462.png",
+  "homepage_url": "https://color-bottle-match-nx4y.vercel.app",
+  "main": {
+    "url": "https://color-bottle-match-nx4y.vercel.app"
+  },
+  "actions": [
+    {
+      "label": "Play Game",
+      "action": "launch_miniapp",
+      "url": "https://color-bottle-match-nx4y.vercel.app"
+    }
+  ]
 }

@@ -16,9 +16,24 @@
 
     <!-- Manifest for Farcaster -->
     <link rel="manifest" href="/manifest.json" />
+    <meta
+      name="farcaster:app"
+      content="https://color-bottle-match-nx4y.vercel.app"
+    />
 
-    <!-- Farcaster SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk/dist/index.min.js"></script>
+    <!-- Farcaster SDK (ESM) -->
+    <script type="module">
+      import { sdk } from "https://esm.sh/@farcaster/miniapp-sdk";
+
+      window.addEventListener("load", async () => {
+        try {
+          await sdk.actions.ready();
+          console.log("Farcaster Mini App is ready ✅");
+        } catch (error) {
+          console.error("Error calling sdk.actions.ready():", error);
+        }
+      });
+    </script>
 
     <!-- Ethers (v5 UMD) -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
@@ -43,6 +58,7 @@
       content="https://color-bottle-match-nx4y.vercel.app/screenshot1.png"
     />
   </head>
+
   <body>
     <div id="game-wrapper">
       <h1>Color Bottle Match</h1>
@@ -86,7 +102,7 @@
       <button id="start-button">Start Game</button>
     </div>
 
-    <!-- Main script -->
+    <!-- Main Game Script -->
     <script src="main.js"></script>
   </body>
 </html>
