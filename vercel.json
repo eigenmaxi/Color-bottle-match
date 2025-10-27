@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/farcaster.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    }
+  ]
+}
