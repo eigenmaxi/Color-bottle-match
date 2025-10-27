@@ -1,0 +1,144 @@
+/* layout + typography */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg,#eef6fb,#f7eaf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#game-wrapper {
+  width: 420px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(18,18,18,0.08);
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Fredoka One', cursive;
+  color: #5b2a86;
+  margin: 6px 0 10px;
+}
+
+/* banner */
+#bottle-banner {
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-bottom: 12px;
+}
+.banner-bottle { width:44px; height:44px; transition: transform .25s; }
+.banner-bottle:hover { transform: scale(1.05) rotate(6deg); }
+
+/* stats and message */
+#stats { display:flex; justify-content:space-between; font-weight:600; margin:6px 10px; color:#222; }
+#message {
+  margin: 12px 0;
+  background: linear-gradient(90deg,#f3e8ff,#eef7ff);
+  color: #3f2a5b;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight:700;
+}
+
+/* grid of bottles */
+#game-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  min-height: 300px;
+  margin-top: 8px;
+}
+
+/* bottle appearance */
+.bottle {
+  width: 80px;
+  height: 130px;
+  border-radius: 18px 18px 10px 10px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  transition: transform .15s, opacity .15s;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom: 8px;
+  color: rgba(255,255,255,0.9);
+  font-weight:700;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+.bottle:hover { transform: translateY(-4px) scale(1.02); }
+.bottle::before {
+  content:'';
+  position:absolute;
+  top:-12px;
+  left:25%;
+  width:50%;
+  height:14px;
+  background: rgba(0,0,0,0.5);
+  border-radius:4px;
+}
+
+/* primary button */
+button {
+  margin-top: 18px;
+  background: #7e57c2;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight:700;
+}
+button:hover { background: #6140a0; transform: translateY(-2px); }
+
+/* End screen styles (polished layout) */
+.end-screen {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+.score-img {
+  width: 78%;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(15,15,15,0.08);
+}
+
+.btn-group {
+  display:flex;
+  gap:10px;
+  width: 88%;
+  justify-content:center;
+}
+
+.share-btn, .mint-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight:700;
+  font-size:14px;
+  cursor: pointer;
+  color: white;
+}
+
+/* button colors */
+.share-btn { background: #556ee6; }
+.share-btn:hover { background: #3f57c4; }
+.mint-btn { background: #00a48f; }
+.mint-btn:hover { background: #008b78; }
+
+/* responsive */
+@media (max-width:460px) {
+  #game-wrapper { width: 94%; padding:16px; }
+  .bottle { width: 68px; height:110px; }
+}

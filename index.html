@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Color Bottle Match</title>
+
+    <!-- Manifest -->
+    <link
+      rel="manifest"
+      href="https://bottle-match-game.vercel.app/manifest.json"
+    />
+
+    <!-- Farcaster Frame tags -->
+    <meta name="fc:frame" content="vNext" />
+    <meta property="og:title" content="Bottle Match Game" />
+    <meta
+      property="og:description"
+      content="Tap bottles, beat the clock, and mint your score as an NFT on Base!"
+    />
+    <meta
+      property="og:image"
+      content="https://bottle-match-game.vercel.app/preview.png"
+    />
+    <meta
+      property="fc:frame:image"
+      content="https://bottle-match-game.vercel.app/preview.png"
+    />
+    <meta
+      property="fc:frame:post_url"
+      content="https://bottle-match-game.vercel.app/api/frame"
+    />
+    <meta property="fc:frame:button:1" content="Play Bottle Match" />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Ethers (v5 UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  </head>
+
+  <body>
+    <div id="game-wrapper">
+      <h1>Color Bottle Match</h1>
+
+      <!-- Decorative bottles on start screen -->
+      <div id="bottle-banner">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+          alt="Bottle"
+          class="banner-bottle"
+          style="filter: hue-rotate(0deg)"
+        />
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+          alt="Bottle"
+          class="banner-bottle"
+          style="filter: hue-rotate(90deg)"
+        />
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+          alt="Bottle"
+          class="banner-bottle"
+          style="filter: hue-rotate(180deg)"
+        />
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+          alt="Bottle"
+          class="banner-bottle"
+          style="filter: hue-rotate(270deg)"
+        />
+      </div>
+
+      <div id="stats">
+        <p id="timer">Time: 30s</p>
+        <p id="score">Score: 0</p>
+      </div>
+
+      <p id="message"></p>
+      <div id="game-container"></div>
+
+      <button id="start-button">Start Game</button>
+    </div>
+
+    <!-- Main script -->
+    <script src="main.js"></script>
+  </body>
+</html>
