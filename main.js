@@ -20,9 +20,9 @@ let bottles = [];
 
 const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink'];
 
-const CONTRACT_ADDRESS = "0xCd0F532029F42F21E18eA1164cF8848cF380B370"; // New contract on Base mainnet
+const CONTRACT_ADDRESS = "0xCd0F532029F42F21E18eA1164cF8848cF380B370"; // Base mainnet contract
 const ABI = [
-  "function mintScoreNFT(string memory imageUrl, uint256 score) public" // Updated to match new contract
+  "function mintScoreNFT(string memory imageUrl, uint256 score) public"
 ];
 
 // ------- GAME LOGIC -------
@@ -74,8 +74,8 @@ function handleBottleClick(bottle) {
   }
   const remaining = bottles.filter(b => b.dataset.color === targetColor && b.style.visibility !== 'hidden');
   if (remaining.length === 0) {
-    generateBottles(); // Regenerate all bottles
-    setTargetColor(); // Set new random target
+    generateBottles();
+    setTargetColor();
   }
 }
 
@@ -98,13 +98,11 @@ function endGame() {
 async function showEndScreen() {
   gameContainer.innerHTML = '';
 
-  // Create scorecard
   const canvas = document.createElement('canvas');
   canvas.width = 600;
   canvas.height = 800;
   const ctx = canvas.getContext('2d');
 
-  // Gradient background
   const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   g.addColorStop(0, '#2b2d42');
   g.addColorStop(0.5, '#5a55a3');
@@ -112,11 +110,9 @@ async function showEndScreen() {
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Card panel
   ctx.fillStyle = 'rgba(255,255,255,0.06)';
   ctx.fillRect(30, 100, canvas.width - 60, canvas.height - 240);
 
-  // Bottle art
   ctx.fillStyle = '#ffffffcc';
   const bx = canvas.width / 2 - 80;
   ctx.beginPath();
@@ -127,11 +123,9 @@ async function showEndScreen() {
   ctx.closePath();
   ctx.fill();
 
-  // Cap
   ctx.fillStyle = '#2b2d42';
   ctx.fillRect(bx + 30, 150, 100, 30);
 
-  // Text
   ctx.fillStyle = 'white';
   ctx.font = '36px Fredoka One, sans-serif';
   ctx.textAlign = 'center';
@@ -148,19 +142,16 @@ async function showEndScreen() {
   ctx.fillText(compliment, canvas.width / 2, 660);
 
   const imageDataUrl = canvas.toDataURL('image/png');
-
-  // Use actual Pinata upload for production
   const imageUrl = await uploadImage(imageDataUrl);
 
   const img = new Image();
-  img.src = imageDataUrl; // Display base64 for UI
+  img.src = imageDataUrl;
   img.className = 'score-img';
 
   const wrapper = document.createElement('div');
   wrapper.className = 'end-screen';
   wrapper.appendChild(img);
 
-  // Buttons
   const btnGroup = document.createElement('div');
   btnGroup.className = 'btn-group';
 
@@ -195,18 +186,15 @@ async function showEndScreen() {
       const signer = provider.getSigner();
       const contract = new ethersLib.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-      // Get current gas price
       const gasPrice = await provider.getGasPrice();
       console.log('Current gas price:', ethersLib.utils.formatUnits(gasPrice, 'gwei'), 'gwei');
 
-      // Estimate gas for the transaction
-      console.log('Estimating gas for mintScoreNFT...');
       const estimatedGas = await contract.estimateGas.mintScoreNFT(imageUrl, score);
       console.log('Estimated gas:', estimatedGas.toString());
 
       console.log('Minting NFT with image URL:', imageUrl, 'and score:', score);
       const tx = await contract.mintScoreNFT(imageUrl, score, {
-        gasLimit: estimatedGas.mul(120).div(100), // Add 20% buffer
+        gasLimit: estimatedGas.mul(120).div(100),
         gasPrice,
       });
       console.log('Transaction sent:', tx.hash);
@@ -220,9 +208,9 @@ async function showEndScreen() {
       if (err.code === 4001) {
         alert('Transaction rejected by user.');
       } else if (err.message.includes('out of gas') || err.message.includes('exceeds gas limit')) {
-        alert('❌ Transaction failed: insufficient gas. Please try again with a higher gas limit.');
+        alert('❌ Transaction failed: insufficient gas.');
       } else if (err.message.includes('network')) {
-        alert('❌ Network error. Please check your connection to Base Mainnet and try again.');
+        alert('❌ Network error. Please check your connection.');
       } else {
         alert(`❌ Mint failed: ${err.message}. See console for details.`);
       }
@@ -235,7 +223,7 @@ async function showEndScreen() {
   gameContainer.appendChild(wrapper);
 }
 
-// ------- HELPER: IMAGE UPLOAD -------
+// ------- IMAGE UPLOAD -------
 async function uploadImage(imageDataUrl) {
   const blob = await (await fetch(imageDataUrl)).blob();
   const formData = new FormData();
@@ -244,7 +232,7 @@ async function uploadImage(imageDataUrl) {
   const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer YOUR_ACTUAL_PINATA_JWT`, // Replace with your Pinata JWT
+      Authorization: `Bearer YOUR_ACTUAL_PINATA_JWT`,
     },
     body: formData,
   });
@@ -253,19 +241,16 @@ async function uploadImage(imageDataUrl) {
   return `https://gateway.pinata.cloud/ipfs/${result.IpfsHash}`;
 }
 
-// ------- HELPER: SWITCH NETWORK -------
+// ------- SWITCH NETWORK -------
 async function switchToBaseMainnet() {
-  const chainId = '0x2105'; // Base Mainnet
+  const chainId = '0x2105';
   try {
-    console.log('Attempting to switch to chain ID:', chainId);
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId }],
     });
   } catch (switchError) {
-    console.error('Network switch failed:', switchError);
     if (switchError.code === 4902) {
-      console.log('Adding Base Mainnet network...');
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
@@ -281,3 +266,17 @@ async function switchToBaseMainnet() {
     }
   }
 }
+
+// ------- FARCASTER MINI APP READY FIX -------
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    if (window.frame && window.frame.actions && typeof window.frame.actions.ready === "function") {
+      await window.frame.actions.ready();
+      console.log("✅ Farcaster Mini App Ready!");
+    } else {
+      console.log("⚠️ Farcaster frame SDK not found.");
+    }
+  } catch (err) {
+    console.error("Farcaster ready() error:", err);
+  }
+});
