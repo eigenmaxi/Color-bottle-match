@@ -270,11 +270,14 @@ async function switchToBaseMainnet() {
 // ------- FARCASTER MINI APP READY FIX -------
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    if (window.frame && window.frame.actions && typeof window.frame.actions.ready === "function") {
+    if (window.sdk && window.sdk.actions && typeof window.sdk.actions.ready === "function") {
+      await window.sdk.actions.ready();
+      console.log("✅ Farcaster Mini App Ready via SDK!");
+    } else if (window.frame && window.frame.actions && typeof window.frame.actions.ready === "function") {
       await window.frame.actions.ready();
-      console.log("✅ Farcaster Mini App Ready!");
+      console.log("✅ Farcaster Mini App Ready via Frame!");
     } else {
-      console.log("⚠️ Farcaster frame SDK not found.");
+      console.log("⚠️ Farcaster SDK not detected.");
     }
   } catch (err) {
     console.error("Farcaster ready() error:", err);
