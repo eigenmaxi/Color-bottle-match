@@ -14,13 +14,6 @@
     <!-- Styles -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Manifest for Farcaster -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta
-      name="farcaster:app"
-      content="https://color-bottle-match-nx4y.vercel.app"
-    />
-
     <!-- Farcaster SDK (ESM) -->
     <script type="module">
       import { sdk } from "https://esm.sh/@farcaster/miniapp-sdk";
@@ -38,14 +31,11 @@
     <!-- Ethers (v5 UMD) -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
-    <!-- Farcaster Frame Metadata -->
-    <meta name="fc:frame" content="vNext" />
+    <!-- Farcaster Mini App Metadata -->
     <meta
-      name="fc:frame:image"
-      content="https://color-bottle-match-nx4y.vercel.app/screenshot1.png"
+      name="fc:miniapp"
+      content='{"version":"1","imageUrl":"https://color-bottle-match-nx4y.vercel.app/assets/IMG_4291.png","button":{"title":"Play Game","action":{"type":"launch_miniapp"}}}'
     />
-    <meta name="fc:frame:button:1" content="Play Game" />
-    <meta name="fc:frame:button:1:action" content="launch_miniapp" />
 
     <!-- Open Graph Metadata for embeds -->
     <meta property="og:title" content="Color Bottle Match" />
@@ -55,7 +45,7 @@
     />
     <meta
       property="og:image"
-      content="https://color-bottle-match-nx4y.vercel.app/screenshot1.png"
+      content="https://color-bottle-match-nx4y.vercel.app/assets/IMG_4291.png"
     />
   </head>
 
@@ -63,7 +53,7 @@
     <div id="game-wrapper">
       <h1>Color Bottle Match</h1>
 
-      <!-- Decorative bottles on start screen -->
+      <!-- Decorative bottles on start screen (carts) -->
       <div id="bottle-banner">
         <img
           src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
@@ -95,6 +85,9 @@
         <p id="timer">Time: 30s</p>
         <p id="score">Score: 0</p>
       </div>
+
+      <img id="bottle-logo" src="/assets/bottle.png" alt="" />
+      <!-- Purple bottle after stats -->
 
       <p id="message"></p>
       <div id="game-container"></div>

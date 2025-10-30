@@ -1,8 +1,3 @@
-/* main.js - Enhanced Debugging Version
-   Restores your perfect game flow, updates minting for Base mainnet
-   Keeps detailed logging and error handling
-*/
-
 const ethersLib = window.ethers;
 if (!ethersLib) console.warn('ethers not found - blockchain features will not work.');
 
@@ -98,54 +93,71 @@ function endGame() {
 async function showEndScreen() {
   gameContainer.innerHTML = '';
 
-  const canvas = document.createElement('canvas');
-  canvas.width = 600;
-  canvas.height = 800;
-  const ctx = canvas.getContext('2d');
+  const loading = document.createElement('div');
+  loading.textContent = 'Generating scorecard...';
+  loading.style.padding = '20px';
+  loading.style.background = '#f0f0f0';
+  loading.style.borderRadius = '10px';
+  loading.style.margin = '20px 0';
+  gameContainer.appendChild(loading);
 
-  const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  g.addColorStop(0, '#2b2d42');
-  g.addColorStop(0.5, '#5a55a3');
-  g.addColorStop(1, '#9b59b6');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  let imageUrl = '';
+  let imageDataUrl = '';
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 800;
+    const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  ctx.fillRect(30, 100, canvas.width - 60, canvas.height - 240);
+    const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    g.addColorStop(0, '#2b2d42');
+    g.addColorStop(0.5, '#5a55a3');
+    g.addColorStop(1, '#9b59b6');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = '#ffffffcc';
-  const bx = canvas.width / 2 - 80;
-  ctx.beginPath();
-  ctx.moveTo(bx, 180);
-  ctx.lineTo(bx + 160, 180);
-  ctx.lineTo(bx + 160, 500);
-  ctx.lineTo(bx, 500);
-  ctx.closePath();
-  ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillRect(30, 100, canvas.width - 60, canvas.height - 240);
 
-  ctx.fillStyle = '#2b2d42';
-  ctx.fillRect(bx + 30, 150, 100, 30);
+    ctx.fillStyle = '#ffffffcc';
+    const bx = canvas.width / 2 - 80;
+    ctx.beginPath();
+    ctx.moveTo(bx, 180);
+    ctx.lineTo(bx + 160, 180);
+    ctx.lineTo(bx + 160, 500);
+    ctx.lineTo(bx, 500);
+    ctx.closePath();
+    ctx.fill();
 
-  ctx.fillStyle = 'white';
-  ctx.font = '36px Fredoka One, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Bottle Match Scorecard', canvas.width / 2, 90);
+    ctx.fillStyle = '#2b2d42';
+    ctx.fillRect(bx + 30, 150, 100, 30);
 
-  ctx.font = 'bold 48px Poppins, sans-serif';
-  ctx.fillText(`Score: ${score}`, canvas.width / 2, 620);
+    ctx.fillStyle = 'white';
+    ctx.font = '36px Fredoka One, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Bottle Match Scorecard', canvas.width / 2, 90);
 
-  ctx.font = '22px Poppins, sans-serif';
-  let compliment = 'Nice try!';
-  if (score > 40) compliment = 'Legendary!';
-  else if (score > 25) compliment = 'Amazing!';
-  else if (score > 10) compliment = 'Good job!';
-  ctx.fillText(compliment, canvas.width / 2, 660);
+    ctx.font = 'bold 48px Poppins, sans-serif';
+    ctx.fillText(`Score: ${score}`, canvas.width / 2, 620);
 
-  const imageDataUrl = canvas.toDataURL('image/png');
-  const imageUrl = await uploadImage(imageDataUrl);
+    ctx.font = '22px Poppins, sans-serif';
+    let compliment = 'Nice try!';
+    if (score > 40) compliment = 'Legendary!';
+    else if (score > 25) compliment = 'Amazing!';
+    else if (score > 10) compliment = 'Good job!';
+    ctx.fillText(compliment, canvas.width / 2, 660);
+
+    imageDataUrl = canvas.toDataURL('image/png');
+    imageUrl = await uploadImage(imageDataUrl);
+  } catch (err) {
+    console.error('Scorecard generation failed:', err);
+    imageUrl = imageDataUrl;  // Fallback
+  } finally {
+    gameContainer.removeChild(loading);
+  }
 
   const img = new Image();
-  img.src = imageDataUrl;
+  img.src = imageUrl;
   img.className = 'score-img';
 
   const wrapper = document.createElement('div');
@@ -158,10 +170,17 @@ async function showEndScreen() {
   const shareBtn = document.createElement('button');
   shareBtn.className = 'share-btn';
   shareBtn.textContent = '📤 Share Score to Farcaster';
-  shareBtn.onclick = () => {
-    const postText = `🍾 I just scored ${score} in Bottle Match Scorecard! Can you beat me?`;
-    const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(postText)}`;
-    window.open(farcasterUrl, '_blank');
+  shareBtn.onclick = async () => {
+    try {
+      await sdk.actions.composeCast({
+        text: `🍾 I just scored ${score} in Bottle Match Scorecard! Can you beat me?`,
+        embeds: [imageUrl],
+        channelKey: 'farcaster'
+      });
+    } catch (err) {
+      console.error('Share failed:', err);
+      alert('Share failed - check connection or try in Farcaster app.');
+    }
   };
 
   const mintBtn = document.createElement('button');
@@ -169,51 +188,24 @@ async function showEndScreen() {
   mintBtn.textContent = '💎 Mint Scorecard on Base (Fees Apply)';
   mintBtn.onclick = async () => {
     try {
-      if (!window.ethereum) {
-        alert('Please install Rabby or MetaMask and try again.');
-        return;
-      }
-
-      console.log('Requesting wallet accounts...');
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      console.log('Connected accounts:', accounts);
-
-      console.log('Switching to Base Mainnet...');
-      await switchToBaseMainnet();
-      console.log('Network switched successfully');
-
-      const provider = new ethersLib.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const provider = await sdk.wallet.getEthereumProvider();
+      if (!provider) throw new Error('No wallet');
+      await provider.request({ method: 'eth_requestAccounts' });
+      const signer = new ethersLib.providers.Web3Provider(provider).getSigner();
       const contract = new ethersLib.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-      const gasPrice = await provider.getGasPrice();
-      console.log('Current gas price:', ethersLib.utils.formatUnits(gasPrice, 'gwei'), 'gwei');
-
+      const gasPrice = await signer.getGasPrice();
       const estimatedGas = await contract.estimateGas.mintScoreNFT(imageUrl, score);
-      console.log('Estimated gas:', estimatedGas.toString());
 
-      console.log('Minting NFT with image URL:', imageUrl, 'and score:', score);
       const tx = await contract.mintScoreNFT(imageUrl, score, {
         gasLimit: estimatedGas.mul(120).div(100),
-        gasPrice,
+        gasPrice
       });
-      console.log('Transaction sent:', tx.hash);
-
-      const receipt = await tx.wait();
-      console.log('Transaction confirmed:', receipt.transactionHash);
-
-      alert('✅ NFT minted successfully on Base Mainnet!');
+      await tx.wait();
+      alert('✅ NFT minted!');
     } catch (err) {
       console.error('Mint failed:', err);
-      if (err.code === 4001) {
-        alert('Transaction rejected by user.');
-      } else if (err.message.includes('out of gas') || err.message.includes('exceeds gas limit')) {
-        alert('❌ Transaction failed: insufficient gas.');
-      } else if (err.message.includes('network')) {
-        alert('❌ Network error. Please check your connection.');
-      } else {
-        alert(`❌ Mint failed: ${err.message}. See console for details.`);
-      }
+      alert(`❌ Mint failed: ${err.message}`);
     }
   };
 
@@ -238,33 +230,8 @@ async function uploadImage(imageDataUrl) {
   });
 
   const result = await response.json();
+  if (!response.ok) throw new Error('Upload failed');
   return `https://gateway.pinata.cloud/ipfs/${result.IpfsHash}`;
-}
-
-// ------- SWITCH NETWORK -------
-async function switchToBaseMainnet() {
-  const chainId = '0x2105';
-  try {
-    await window.ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId }],
-    });
-  } catch (switchError) {
-    if (switchError.code === 4902) {
-      await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [{
-          chainId,
-          chainName: 'Base Mainnet',
-          rpcUrls: ['https://mainnet.base.org'],
-          nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-          blockExplorerUrls: ['https://basescan.org'],
-        }],
-      });
-    } else {
-      throw switchError;
-    }
-  }
 }
 
 // ------- FARCASTER MINI APP READY FIX -------
